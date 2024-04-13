@@ -1,0 +1,61 @@
+name: 'Magic Semver'
+description: 'Get your next version depending on latest release version !'
+author: 'Mehdi Rahimi @mehdi-ra'
+
+# Add your action's branding here. This will appear on the GitHub Marketplace.
+branding:
+  icon: 'heart'
+  color: 'green'
+
+# Define your inputs here.
+inputs:
+  repo_name:
+    description: 'Target repository name'
+    default: ${{ github.repository }}
+
+  dev_branch_name:
+    description: 'Development branch name'
+    default: develop
+
+  stage_branch_name:
+    description: 'Development branch name'
+    default: stage
+
+  prod_branch_name:
+    description: 'Production branch name'
+    default: main
+
+  breaking_change_expression:
+    description: 'Breaking change expression witch will increases major version'
+    default: 'BREAKING_CHANGE*'
+
+  branch_name:
+    description: 'The message of the commit'
+    default: '${{ github.ref_name }}'
+
+  commit_sha:
+    description: 'Commit message'
+    default: ${{ github.sha }}
+
+  kind:
+    description: 'The kind of trigger. Pull, push or ...'
+    default: '${{ github.event_name }}'
+
+  token:
+    description: 'GITHUB_TOKEN'
+    default: ${{ github.token }}
+
+# Define your outputs here.
+outputs:
+  environment:
+    description: 'Target environment'
+  nextVersion:
+    description: 'Generated next version'
+  versionChangeType:
+    description: 'major or what ?'
+  oldVersion:
+    description: 'Previous version'
+
+runs:
+  using: node20
+  main: dist/index.js
