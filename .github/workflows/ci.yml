@@ -74,7 +74,7 @@ jobs:
         
       - name: "✏️ Generate release changelog"
         id: changelog-ci
-        uses: heinrichreimer/action-github-changelog-generator@v2.4
+        uses: heinrichreimer/action-github-changelog-generator@v2.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }} 
           stripHeaders: 'true'
