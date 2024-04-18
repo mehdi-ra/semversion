@@ -1,4 +1,4 @@
-import { clean } from 'semver'
+import { clean, coerce, valid } from 'semver'
 import { detectEnvironment } from './detectenvironment'
 import { IVersionSchema } from 'src/interfaces/version'
 import { detectCommitVersionChange } from './detectcommitversionchange'
@@ -18,8 +18,9 @@ export function getNextVersionSchema(
   const isPreRelease = environment === 'prod' ? false : true
   const addDate = input('addDate') === 'true' ? true : false
   const middlewares: ((version: string) => string)[] = []
+  const coerceVersion = valid(coerce(cleanVersion))
 
-  if (!cleanVersion) {
+  if (!cleanVersion || !coerceVersion) {
     throw new Error(`Clean version is null, latest: ${latestVersion}`)
   }
 
@@ -37,6 +38,7 @@ export function getNextVersionSchema(
     isPreRelease,
     middlewares,
     versionChangeType,
+    coerceVersion,
     oldVersion: latestVersion
   }
 }

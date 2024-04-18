@@ -41796,7 +41796,8 @@ function getNextVersionSchema(latestVersion, commitMessage) {
     const isPreRelease = environment === 'prod' ? false : true;
     const addDate = (0, getInput_1.input)('addDate') === 'true' ? true : false;
     const middlewares = [];
-    if (!cleanVersion) {
+    const coerceVersion = (0, semver_1.valid)((0, semver_1.coerce)(cleanVersion));
+    if (!cleanVersion || !coerceVersion) {
         throw new Error(`Clean version is null, latest: ${latestVersion}`);
     }
     if (addDate) {
@@ -41811,6 +41812,7 @@ function getNextVersionSchema(latestVersion, commitMessage) {
         isPreRelease,
         middlewares,
         versionChangeType,
+        coerceVersion,
         oldVersion: latestVersion
     };
 }
@@ -41942,8 +41944,13 @@ exports.versionUpdater = (function () {
             return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
         },
         unknown: (versionUpdaterSchema) => {
-            if (versionUpdaterSchema.middlewares.length > 0) {
-                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(versionUpdaterSchema.cleanVersion, versionUpdaterSchema.middlewares);
+            if (versionUpdaterSchema.middlewares.length > 0 &&
+                versionUpdaterSchema.environment === 'prod') {
+                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(versionUpdaterSchema.coerceVersion, versionUpdaterSchema.middlewares);
+            }
+            else if (versionUpdaterSchema.middlewares.length > 0 &&
+                versionUpdaterSchema.environment !== 'unknown') {
+                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(`${versionUpdaterSchema.coerceVersion}-${versionUpdaterSchema.environment}`, versionUpdaterSchema.middlewares);
             }
             return versionUpdaterSchema.oldVersion;
         }
