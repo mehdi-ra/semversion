@@ -77,4 +77,4 @@ jobs:
         with:
           name: "${{ steps.test-action.outputs.nextVersion }}"
           tag: "${{ steps.test-action.outputs.nextVersion }}"
-          
+          prerelease: "${{ steps.test-action.outputs.prerelease }}"

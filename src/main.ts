@@ -19,6 +19,7 @@ export async function run(): Promise<void> {
     output('nextVersion', generateNextVersion(nextVersionSchema))
     output('versionChangeType', nextVersionSchema.versionChangeType)
     output('oldVersion', nextVersionSchema.oldVersion)
+    output('prerelease', nextVersionSchema.isPreRelease ? 'true' : 'false')
   } catch (error) {
     if (error instanceof Error) setFailed(error.message)
   }

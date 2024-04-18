@@ -41916,6 +41916,7 @@ async function run() {
         (0, setoutput_1.output)('nextVersion', (0, generatenextversion_1.generateNextVersion)(nextVersionSchema));
         (0, setoutput_1.output)('versionChangeType', nextVersionSchema.versionChangeType);
         (0, setoutput_1.output)('oldVersion', nextVersionSchema.oldVersion);
+        (0, setoutput_1.output)('prerelease', nextVersionSchema.isPreRelease ? 'true' : 'false');
     }
     catch (error) {
         if (error instanceof Error)
