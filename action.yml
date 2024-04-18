@@ -49,6 +49,10 @@ inputs:
     description: Add date to version true or false
     default: 'false'
 
+  versionPrefix:
+    default: 'v'
+    description: Versions prefix, the default is v
+
 # Define your outputs here.
 outputs:
   environment:

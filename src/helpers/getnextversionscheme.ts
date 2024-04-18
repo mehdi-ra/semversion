@@ -19,6 +19,7 @@ export function getNextVersionSchema(
   const addDate = input('addDate') === 'true' ? true : false
   const middlewares: ((version: string) => string)[] = []
   const coerceVersion = valid(coerce(cleanVersion))
+  const versionPrefix = input('versionPrefix')
 
   if (!cleanVersion || !coerceVersion) {
     throw new Error(`Clean version is null, latest: ${latestVersion}`)
@@ -31,6 +32,10 @@ export function getNextVersionSchema(
       return `${version}-${formattedDate()}`
     })
   }
+
+  middlewares.push((version: string): string => {
+    return `${versionPrefix}${version}`
+  })
 
   return {
     environment,

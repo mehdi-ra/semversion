@@ -92,25 +92,22 @@ export const versionUpdater = (function () {
     },
 
     unknown: (versionUpdaterSchema: IVersionSchema): string => {
-      if (
-        versionUpdaterSchema.middlewares.length > 0 &&
-        versionUpdaterSchema.environment === 'prod'
-      ) {
+      if (versionUpdaterSchema.environment === 'prod') {
         return versionMiddlewareApplier(
           versionUpdaterSchema.coerceVersion,
           versionUpdaterSchema.middlewares
         )
-      } else if (
-        versionUpdaterSchema.middlewares.length > 0 &&
-        versionUpdaterSchema.environment !== 'unknown'
-      ) {
+      } else if (versionUpdaterSchema.environment !== 'unknown') {
         return versionMiddlewareApplier(
           `${versionUpdaterSchema.coerceVersion}-${versionUpdaterSchema.environment}`,
           versionUpdaterSchema.middlewares
         )
+      } else {
+        return versionMiddlewareApplier(
+          versionUpdaterSchema.cleanVersion,
+          versionUpdaterSchema.middlewares
+        )
       }
-
-      return versionUpdaterSchema.oldVersion
     }
   }
 })()
