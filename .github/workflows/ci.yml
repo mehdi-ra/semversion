@@ -78,6 +78,10 @@ jobs:
         with:
           release_version: "${{ steps.test-action.outputs.nextVersion }}"
 
+      - name: Log changes
+        run: |
+        echo "${{ steps.changelog-ci.outputs.changelog }}"
+
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
         if: "${{ steps.test-action.outputs.nextVersion != steps.test-action.outputs.oldVersion }}"
