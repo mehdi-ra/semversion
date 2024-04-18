@@ -44,7 +44,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Magic Semver Action
       id: semver
-      uses: mehdi-ra/magic-semver-action@v0.5.0-2024-04-18-16-05-21
+      uses: mehdi-ra/magic-semver-action@v0.1.1
 
     - name: Get the outputs
       run: |
