@@ -41802,7 +41802,7 @@ function getNextVersionSchema(latestVersion, commitMessage) {
     if (addDate) {
         middlewares.push((version) => {
             const formattedDate = () => new Date().toISOString().replace(/[T:-]/g, '-').split('.')[0];
-            return version + formattedDate();
+            return `${version}-${formattedDate()}`;
         });
     }
     return {

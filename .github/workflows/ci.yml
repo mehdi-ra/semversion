@@ -64,7 +64,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           addDate: 'true'
-          
+
       - name: Print Output
         id: output
         run: echo "${{ steps.test-action.outputs.environment }}"
