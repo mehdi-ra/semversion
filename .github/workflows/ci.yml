@@ -72,11 +72,11 @@ jobs:
         id: outputs
         run: echo "${{ steps.test-action.outputs.nextVersion }}"
         
-      - name: changelog-ci
-        uses: saadmk11/changelog-ci@v1.1.2
+      - name: "✏️ Generate release changelog"
         id: changelog-ci
+        uses: heinrichreimer/action-github-changelog-generator@v2.3
         with:
-          release_version: "${{ steps.test-action.outputs.nextVersion }}"
+          token: ${{ secrets.GITHUB_TOKEN }} 
 
       - name: Log changes
         run: |
