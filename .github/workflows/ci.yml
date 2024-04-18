@@ -80,7 +80,7 @@ jobs:
 
       - name: Log changes
         run: |
-        echo "${{ steps.changelog-ci.outputs.changelog }}"
+          echo "${{ steps.changelog-ci.outputs.changelog }}"
 
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
