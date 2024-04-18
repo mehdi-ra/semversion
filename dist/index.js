@@ -41797,6 +41797,7 @@ function getNextVersionSchema(latestVersion, commitMessage) {
     const addDate = (0, getInput_1.input)('addDate') === 'true' ? true : false;
     const middlewares = [];
     const coerceVersion = (0, semver_1.valid)((0, semver_1.coerce)(cleanVersion));
+    const versionPrefix = (0, getInput_1.input)('versionPrefix');
     if (!cleanVersion || !coerceVersion) {
         throw new Error(`Clean version is null, latest: ${latestVersion}`);
     }
@@ -41806,6 +41807,9 @@ function getNextVersionSchema(latestVersion, commitMessage) {
             return `${version}-${formattedDate()}`;
         });
     }
+    middlewares.push((version) => {
+        return `${versionPrefix}${version}`;
+    });
     return {
         environment,
         cleanVersion,
@@ -41944,15 +41948,15 @@ exports.versionUpdater = (function () {
             return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
         },
         unknown: (versionUpdaterSchema) => {
-            if (versionUpdaterSchema.middlewares.length > 0 &&
-                versionUpdaterSchema.environment === 'prod') {
+            if (versionUpdaterSchema.environment === 'prod') {
                 return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(versionUpdaterSchema.coerceVersion, versionUpdaterSchema.middlewares);
             }
-            else if (versionUpdaterSchema.middlewares.length > 0 &&
-                versionUpdaterSchema.environment !== 'unknown') {
+            else if (versionUpdaterSchema.environment !== 'unknown') {
                 return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(`${versionUpdaterSchema.coerceVersion}-${versionUpdaterSchema.environment}`, versionUpdaterSchema.middlewares);
             }
-            return versionUpdaterSchema.oldVersion;
+            else {
+                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(versionUpdaterSchema.cleanVersion, versionUpdaterSchema.middlewares);
+            }
         }
     };
 })();
