@@ -49,6 +49,9 @@ jobs:
   test-action:
     name: Gi tHub Actions Test
     runs-on: ubuntu-latest
+    permissions:
+      # To allow one action to create release
+      contents: write
 
     steps:
       - name: Checkout
