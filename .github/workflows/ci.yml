@@ -71,14 +71,6 @@ jobs:
       - name: Print Output2
         id: outputs
         run: echo "${{ steps.test-action.outputs.nextVersion }}"
-        
-      - name: Generate Release Notes
-        uses: paolorevillosa/release-change-logs@v3.0
-        id: changelog-ci
-        
-      - name: Log changes
-        run: |
-          echo "${{ steps.changelog-ci.outputs.change-logs }}"
 
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
@@ -88,3 +80,10 @@ jobs:
           tag: "${{ steps.test-action.outputs.nextVersion }}"
           prerelease: "${{ steps.test-action.outputs.prerelease }}"
           body: "${{ steps.changelog-ci.outputs.change-logs }}"
+
+      - uses: marvinpinto/action-automatic-releases@v1.2.1
+        if: "${{ steps.test-action.outputs.nextVersion != steps.test-action.outputs.oldVersion }}"
+        with:
+          automatic_release_tag: "${{ steps.test-action.outputs.nextVersion }}"
+          prerelease: "${{ steps.test-action.outputs.prerelease }}"
+          title: "${{ steps.test-action.outputs.nextVersion }}"
