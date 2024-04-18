@@ -45,6 +45,10 @@ inputs:
     description: 'GITHUB_TOKEN'
     default: ${{ github.token }}
 
+  addDate:
+    description: Add date to version true or false
+    default: 'false'
+
 # Define your outputs here.
 outputs:
   environment:

@@ -41784,19 +41784,32 @@ exports.getNextVersionSchema = void 0;
 const semver_1 = __nccwpck_require__(1383);
 const detectenvironment_1 = __nccwpck_require__(3462);
 const detectcommitversionchange_1 = __nccwpck_require__(701);
+const getInput_1 = __nccwpck_require__(2515);
 /**
  * Get next version schema witch includes information about the
  * previous version and next version.
  */
 function getNextVersionSchema(latestVersion, commitMessage) {
     const environment = (0, detectenvironment_1.detectEnvironment)();
-    const cleanVersion = (0, semver_1.valid)((0, semver_1.clean)(latestVersion)) || 'null';
+    const cleanVersion = (0, semver_1.clean)(latestVersion, { loose: true });
     const versionChangeType = (0, detectcommitversionchange_1.detectCommitVersionChange)(commitMessage);
     const isPreRelease = environment === 'prod' ? false : true;
+    const addDate = (0, getInput_1.input)('addDate') === 'true' ? true : false;
+    const middlewares = [];
+    if (!cleanVersion) {
+        throw new Error(`Clean version is null, latest: ${latestVersion}`);
+    }
+    if (addDate) {
+        middlewares.push((version) => {
+            const formattedDate = () => new Date().toISOString().replace(/[T:-]/g, '-').split('.')[0];
+            return `${version}-${formattedDate()}`;
+        });
+    }
     return {
         environment,
         cleanVersion,
         isPreRelease,
+        middlewares,
         versionChangeType,
         oldVersion: latestVersion
     };
@@ -41847,6 +41860,28 @@ exports.output = output;
 
 /***/ }),
 
+/***/ 54:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.versionMiddlewareApplier = void 0;
+function versionMiddlewareApplier(version, middlewares) {
+    if (middlewares.length <= 0) {
+        return version;
+    }
+    let modifiedVersion = version;
+    for (const middleware of middlewares) {
+        modifiedVersion = middleware(modifiedVersion);
+    }
+    return modifiedVersion;
+}
+exports.versionMiddlewareApplier = versionMiddlewareApplier;
+
+
+/***/ }),
+
 /***/ 1611:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -41855,33 +41890,61 @@ exports.output = output;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.versionUpdater = void 0;
 const semver_1 = __nccwpck_require__(1383);
+const versionmiddlewareapplier_1 = __nccwpck_require__(54);
 exports.versionUpdater = (function () {
     return {
         major: (versionUpdaterSchema) => {
             const env = versionUpdaterSchema.environment;
             const oldVersion = versionUpdaterSchema.oldVersion;
             if (versionUpdaterSchema.isPreRelease) {
-                return (0, semver_1.inc)(oldVersion, 'premajor', env, false) || '';
+                const newVersion = (0, semver_1.inc)(oldVersion, 'premajor', env, false);
+                if (!newVersion) {
+                    throw new Error('New version on premajor update is null');
+                }
+                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
             }
-            return (0, semver_1.inc)(oldVersion, 'major') || '';
+            const newVersion = (0, semver_1.inc)(oldVersion, 'major');
+            if (!newVersion) {
+                throw new Error('New version on major update is null');
+            }
+            return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
         },
         minor: (versionUpdaterSchema) => {
             const env = versionUpdaterSchema.environment;
             const oldVersion = versionUpdaterSchema.oldVersion;
             if (versionUpdaterSchema.isPreRelease) {
-                return (0, semver_1.inc)(oldVersion, 'preminor', env, false) || '';
+                const newVersion = (0, semver_1.inc)(oldVersion, 'preminor', env, false);
+                if (!newVersion) {
+                    throw new Error('New version on preminor update is null');
+                }
+                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
             }
-            return (0, semver_1.inc)(oldVersion, 'minor') || '';
+            const newVersion = (0, semver_1.inc)(oldVersion, 'minor');
+            if (!newVersion) {
+                throw new Error('New version on minor update is null');
+            }
+            return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
         },
         patch: (versionUpdaterSchema) => {
             const env = versionUpdaterSchema.environment;
             const oldVersion = versionUpdaterSchema.oldVersion;
             if (versionUpdaterSchema.isPreRelease) {
-                return (0, semver_1.inc)(oldVersion, 'prepatch', env, false) || '';
+                const newVersion = (0, semver_1.inc)(oldVersion, 'prepatch', env, false);
+                if (!newVersion) {
+                    throw new Error('New version on prepatch update is null');
+                }
+                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
             }
-            return (0, semver_1.inc)(oldVersion, 'patch') || '';
+            const newVersion = (0, semver_1.inc)(oldVersion, 'patch');
+            if (!newVersion) {
+                throw new Error('New version on patch update is null');
+            }
+            return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(newVersion, versionUpdaterSchema.middlewares);
         },
         unknown: (versionUpdaterSchema) => {
+            if (versionUpdaterSchema.middlewares.length > 0) {
+                return (0, versionmiddlewareapplier_1.versionMiddlewareApplier)(versionUpdaterSchema.cleanVersion, versionUpdaterSchema.middlewares);
+            }
             return versionUpdaterSchema.oldVersion;
         }
     };
