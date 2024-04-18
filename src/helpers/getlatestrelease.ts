@@ -44,6 +44,6 @@ export async function getLatestRelease(): Promise<string> {
     // Problem in getting latest release
     error(e as Error)
     console.error(e)
-    return 'v0.1.0'
+    return '0.1.0'
   }
 }
