@@ -27,7 +27,7 @@ export function getNextVersionSchema(
     middlewares.push((version: string): string => {
       const formattedDate = (): string =>
         new Date().toISOString().replace(/[T:-]/g, '-').split('.')[0]
-      return version + formattedDate()
+      return `${version}-${formattedDate()}`
     })
   }
 
