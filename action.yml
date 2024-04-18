@@ -55,7 +55,8 @@ outputs:
     description: 'major or what ?'
   oldVersion:
     description: 'Previous version'
-
+  prerelease:
+    description: 'Is prerelease or not ! returns true or false'
 runs:
   using: node20
   main: dist/index.js

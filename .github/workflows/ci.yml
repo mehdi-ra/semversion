@@ -74,7 +74,17 @@ jobs:
 
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
+        if: "${{ steps.test-action.outputs.nextVersion != steps.test-action.outputs.oldVersion }}"
         with:
           name: "${{ steps.test-action.outputs.nextVersion }}"
           tag: "${{ steps.test-action.outputs.nextVersion }}"
-          
+          prerelease: "${{ steps.test-action.outputs.prerelease }}"
+          body: "${{ steps.changelog-ci.outputs.change-logs }}"
+
+      - uses: marvinpinto/action-automatic-releases@v1.2.1
+        if: "${{ steps.test-action.outputs.nextVersion != steps.test-action.outputs.oldVersion }}"
+        with:
+          repo_token: ${{ github.token }}
+          automatic_release_tag: "${{ steps.test-action.outputs.nextVersion }}"
+          prerelease: "${{ steps.test-action.outputs.prerelease }}"
+          title: "${{ steps.test-action.outputs.nextVersion }}"
