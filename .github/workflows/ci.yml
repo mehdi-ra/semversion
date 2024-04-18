@@ -33,6 +33,7 @@ jobs:
       - name: Check Format
         id: npm-format-check
         run: npm run format:check
+        if: always()
 
       - name: Lint
         id: npm-lint
