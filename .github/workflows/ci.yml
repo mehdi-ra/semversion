@@ -77,7 +77,7 @@ jobs:
         uses: heinrichreimer/action-github-changelog-generator@v2.4
         with:
           token: ${{ secrets.GITHUB_TOKEN }} 
-          onlyLastTag: 'true'
+          stripHeaders: 'true'
 
       - name: Log changes
         run: |
