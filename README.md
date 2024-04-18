@@ -52,3 +52,4 @@ jobs:
         echo "Next Version: ${{ steps.semver.outputs.nextVersion }}"
         echo "Version Change Type: ${{ steps.semver.outputs.versionChangeType }}"
         echo "Old Version: ${{ steps.semver.outputs.oldVersion }}"
+```
