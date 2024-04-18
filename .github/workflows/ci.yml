@@ -57,9 +57,6 @@ jobs:
       - name: Test Local Action
         id: test-action
         uses: ./
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          addDate: 'true'
 
       - name: Print Output
         id: output
