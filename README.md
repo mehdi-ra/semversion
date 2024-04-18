@@ -44,17 +44,8 @@ jobs:
       uses: actions/checkout@v2
     - name: Magic Semver Action
       id: semver
-      uses: mehdi-ra/magic-semver-action@v1
-      with:
-        repo_name: 'your-repo-name'
-        dev_branch_name: 'develop'
-        stage_branch_name: 'stage'
-        prod_branch_name: 'main'
-        breaking_change_expression: 'BREAKING_CHANGE*'
-        branch_name: '${{ github.ref_name }}'
-        commit_sha: '${{ github.sha }}'
-        kind: '${{ github.event_name }}'
-        token: '${{ secrets.GITHUB_TOKEN }}'
+      uses: mehdi-ra/magic-semver-action@v0.5.0-2024-04-18-16-05-21
+
     - name: Get the outputs
       run: |
         echo "Environment: ${{ steps.semver.outputs.environment }}"
