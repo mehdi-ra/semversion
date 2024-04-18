@@ -72,16 +72,13 @@ jobs:
         id: outputs
         run: echo "${{ steps.test-action.outputs.nextVersion }}"
         
-      - name: "✏️ Generate release changelog"
+      - name: Generate Release Notes
+        uses: paolorevillosa/release-change-logs@v3.0
         id: changelog-ci
-        uses: heinrichreimer/action-github-changelog-generator@v2.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }} 
-          stripHeaders: 'true'
-
+        
       - name: Log changes
         run: |
-          echo "${{ steps.changelog-ci.outputs.changelog }}"
+          echo "${{ steps.changelog-ci.outputs.change-logs }}"
 
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
@@ -90,4 +87,4 @@ jobs:
           name: "${{ steps.test-action.outputs.nextVersion }}"
           tag: "${{ steps.test-action.outputs.nextVersion }}"
           prerelease: "${{ steps.test-action.outputs.prerelease }}"
-          body: "${{ steps.changelog-ci.outputs.changelog }}"
+          body: "${{ steps.changelog-ci.outputs.change-logs }}"
