@@ -1,5 +1,6 @@
 import { inc } from 'semver'
 import { IVersionSchema } from 'src/interfaces/version'
+import { versionMiddlewareApplier } from './versionmiddlewareapplier'
 
 export const versionUpdater = (function () {
   return {
@@ -8,10 +9,28 @@ export const versionUpdater = (function () {
       const oldVersion = versionUpdaterSchema.oldVersion
 
       if (versionUpdaterSchema.isPreRelease) {
-        return inc(oldVersion, 'premajor', env, false) || ''
+        const newVersion = inc(oldVersion, 'premajor', env, false)
+
+        if (!newVersion) {
+          throw new Error('New version on premajor update is null')
+        }
+
+        return versionMiddlewareApplier(
+          newVersion,
+          versionUpdaterSchema.middlewares
+        )
       }
 
-      return inc(oldVersion, 'major') || ''
+      const newVersion = inc(oldVersion, 'major')
+
+      if (!newVersion) {
+        throw new Error('New version on major update is null')
+      }
+
+      return versionMiddlewareApplier(
+        newVersion,
+        versionUpdaterSchema.middlewares
+      )
     },
 
     minor: (versionUpdaterSchema: IVersionSchema): string => {
@@ -19,10 +38,28 @@ export const versionUpdater = (function () {
       const oldVersion = versionUpdaterSchema.oldVersion
 
       if (versionUpdaterSchema.isPreRelease) {
-        return inc(oldVersion, 'preminor', env, false) || ''
+        const newVersion = inc(oldVersion, 'preminor', env, false)
+
+        if (!newVersion) {
+          throw new Error('New version on preminor update is null')
+        }
+
+        return versionMiddlewareApplier(
+          newVersion,
+          versionUpdaterSchema.middlewares
+        )
       }
 
-      return inc(oldVersion, 'minor') || ''
+      const newVersion = inc(oldVersion, 'minor')
+
+      if (!newVersion) {
+        throw new Error('New version on minor update is null')
+      }
+
+      return versionMiddlewareApplier(
+        newVersion,
+        versionUpdaterSchema.middlewares
+      )
     },
 
     patch: (versionUpdaterSchema: IVersionSchema): string => {
@@ -30,13 +67,38 @@ export const versionUpdater = (function () {
       const oldVersion = versionUpdaterSchema.oldVersion
 
       if (versionUpdaterSchema.isPreRelease) {
-        return inc(oldVersion, 'prepatch', env, false) || ''
+        const newVersion = inc(oldVersion, 'prepatch', env, false)
+
+        if (!newVersion) {
+          throw new Error('New version on prepatch update is null')
+        }
+
+        return versionMiddlewareApplier(
+          newVersion,
+          versionUpdaterSchema.middlewares
+        )
       }
 
-      return inc(oldVersion, 'patch') || ''
+      const newVersion = inc(oldVersion, 'patch')
+
+      if (!newVersion) {
+        throw new Error('New version on patch update is null')
+      }
+
+      return versionMiddlewareApplier(
+        newVersion,
+        versionUpdaterSchema.middlewares
+      )
     },
 
     unknown: (versionUpdaterSchema: IVersionSchema): string => {
+      if (versionUpdaterSchema.middlewares.length > 0) {
+        return versionMiddlewareApplier(
+          versionUpdaterSchema.cleanVersion,
+          versionUpdaterSchema.middlewares
+        )
+      }
+
       return versionUpdaterSchema.oldVersion
     }
   }

@@ -4,6 +4,7 @@ export interface IVersionSchema {
   cleanVersion: string
   isPreRelease: boolean
   oldVersion: string
+  middlewares: ((version: string) => string)[]
 }
 
 export type TEnvironments = 'prod' | 'dev' | 'stage' | 'unknown'
