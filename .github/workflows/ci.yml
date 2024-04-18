@@ -84,6 +84,7 @@ jobs:
       - uses: marvinpinto/action-automatic-releases@v1.2.1
         if: "${{ steps.test-action.outputs.nextVersion != steps.test-action.outputs.oldVersion }}"
         with:
+          repo_token: ${{ github.token }}
           automatic_release_tag: "${{ steps.test-action.outputs.nextVersion }}"
           prerelease: "${{ steps.test-action.outputs.prerelease }}"
           title: "${{ steps.test-action.outputs.nextVersion }}"
