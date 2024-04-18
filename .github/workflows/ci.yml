@@ -75,6 +75,8 @@ jobs:
       - name: changelog-ci
         uses: saadmk11/changelog-ci@v1.1.2
         id: changelog-ci
+        with:
+          release_version: "${{ steps.test-action.outputs.nextVersion }}"
 
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
@@ -84,4 +86,3 @@ jobs:
           tag: "${{ steps.test-action.outputs.nextVersion }}"
           prerelease: "${{ steps.test-action.outputs.prerelease }}"
           body: "${{ steps.changelog-ci.outputs.changelog }}"
-          
