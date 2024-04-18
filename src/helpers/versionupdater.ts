@@ -92,9 +92,20 @@ export const versionUpdater = (function () {
     },
 
     unknown: (versionUpdaterSchema: IVersionSchema): string => {
-      if (versionUpdaterSchema.middlewares.length > 0) {
+      if (
+        versionUpdaterSchema.middlewares.length > 0 &&
+        versionUpdaterSchema.environment === 'prod'
+      ) {
         return versionMiddlewareApplier(
-          versionUpdaterSchema.cleanVersion,
+          versionUpdaterSchema.coerceVersion,
+          versionUpdaterSchema.middlewares
+        )
+      } else if (
+        versionUpdaterSchema.middlewares.length > 0 &&
+        versionUpdaterSchema.environment !== 'unknown'
+      ) {
+        return versionMiddlewareApplier(
+          `${versionUpdaterSchema.coerceVersion}-${versionUpdaterSchema.environment}`,
           versionUpdaterSchema.middlewares
         )
       }

@@ -4,6 +4,7 @@ export interface IVersionSchema {
   cleanVersion: string
   isPreRelease: boolean
   oldVersion: string
+  coerceVersion: string
   middlewares: ((version: string) => string)[]
 }
 
