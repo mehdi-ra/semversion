@@ -74,9 +74,10 @@ jobs:
         
       - name: "✏️ Generate release changelog"
         id: changelog-ci
-        uses: heinrichreimer/action-github-changelog-generator@v2.3
+        uses: heinrichreimer/action-github-changelog-generator@v2.4
         with:
           token: ${{ secrets.GITHUB_TOKEN }} 
+          onlyLastTag: 'true'
 
       - name: Log changes
         run: |
