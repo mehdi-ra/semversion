@@ -9,11 +9,11 @@ import { input } from './getInput'
  * previous version and next version.
  */
 export function getNextVersionSchema(
-  latestVersion: string,
+  lastRelease: string,
   commitMessage: string
 ): IVersionSchema {
   const environment = detectEnvironment()
-  const cleanVersion = clean(latestVersion, { loose: true })
+  const cleanVersion = clean(lastRelease, { loose: true })
   const versionChangeType = detectCommitVersionChange(commitMessage)
   const isPreRelease = environment === 'prod' ? false : true
   const addDate = input('addDate') === 'true' ? true : false
@@ -21,8 +21,22 @@ export function getNextVersionSchema(
   const coerceVersion = valid(coerce(cleanVersion))
   const versionPrefix = input('versionPrefix')
 
-  if (!cleanVersion || !coerceVersion) {
-    throw new Error(`Clean version is null, latest: ${latestVersion}`)
+  if (!cleanVersion) {
+    throw new Error(
+      `Clean version is not correct or null, cleanVersion: ${cleanVersion}, lastRelease: ${lastRelease}`
+    )
+  }
+
+  if (!coerceVersion) {
+    throw new Error(
+      `Version is not valid or null coerce, lastRelease: ${lastRelease}, coerceVersion: ${coerceVersion}`
+    )
+  }
+
+  if (!cleanVersion) {
+    throw new Error(
+      `Clean version is null, lastRelease: ${lastRelease}, cleanVersion: ${cleanVersion}`
+    )
   }
 
   if (addDate) {
@@ -44,6 +58,6 @@ export function getNextVersionSchema(
     middlewares,
     versionChangeType,
     coerceVersion,
-    oldVersion: latestVersion
+    oldVersion: lastRelease
   }
 }

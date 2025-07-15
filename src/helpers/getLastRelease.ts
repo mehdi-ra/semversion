@@ -1,15 +1,14 @@
-// # Get the latest release with tag.
-
 import { Octokit } from 'octokit'
 import { input } from './getInput'
 import { getRepoDetails } from './getreponame'
 import { error } from '@actions/core'
+
 /**
  * Get latest release and the tag.
  * It should be version like :)
  * @returns { string } latest release name.
  */
-export async function getLatestRelease(): Promise<string> {
+export async function getLastRelease(): Promise<string> {
   const token = input('token')
   const repoDetails = getRepoDetails()
   const octokit = new Octokit({
@@ -33,6 +32,7 @@ export async function getLatestRelease(): Promise<string> {
       const dateB = new Date(b.created_at)
       return dateB.getTime() - dateA.getTime()
     })
+
     const version = sorted[0]?.name || sorted[0]?.tag_name
 
     if (!version) {
@@ -41,7 +41,6 @@ export async function getLatestRelease(): Promise<string> {
 
     return version
   } catch (e) {
-    // Problem in getting latest release
     error(e as Error)
     console.error(e)
     return '0.1.0'
