@@ -1,10 +1,11 @@
+import { isCandidateForMajorIncreaseRegEx, isCandidateForMinorIncreaseRegEx, isCandidateForPatchIncreaseRegEx } from '../const';
 import { TVersionChange } from '../interfaces/version';
 
 export function detectCommitVersionChange(
   commitMessage: string
 ): TVersionChange {
   const isCandidateForMajorIncrease =
-    /^(BREAKING_CHANGE){1}(\([\w.]+\))?(!)?: ([\w ])+([\s\S]*)/gm.test(
+    isCandidateForMajorIncreaseRegEx.test(
       commitMessage
     );
 
@@ -13,14 +14,14 @@ export function detectCommitVersionChange(
   }
 
   const isCandidateForMinorIncrease =
-    /^(feat){1}(\([\w.]+\))?(!)?: ([\w ])+([\s\S]*)/gm.test(commitMessage);
+    isCandidateForMinorIncreaseRegEx.test(commitMessage);
 
   if (isCandidateForMinorIncrease) {
     return 'minor';
   }
 
   const isCandidateForPatchIncrease =
-    /^(fix){1}(\([\w.]+\))?(!)?: ([\w ])+([\s\S]*)/gm.test(commitMessage);
+    isCandidateForPatchIncreaseRegEx.test(commitMessage);
 
   if (isCandidateForPatchIncrease) {
     return 'patch';
