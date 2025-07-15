@@ -1,0 +1,87 @@
+name: Tests
+
+on:
+    pull_request:
+        types: [opened]
+
+jobs:
+    test-typescript:
+        name: TypeScript Tests
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout
+          id: checkout
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          id: setup-node
+          uses: actions/setup-node@v4
+          with:
+            node-version-file: .node-version
+            cache: npm
+
+        - name: Install Dependencies
+          id: npm-ci
+          run: npm ci
+
+        - name: Check Code Formatting
+          id: format-check
+          run: npm run format:check
+
+        - name: Lint Code
+          id: npm-lint
+          run: npm run lint
+
+        - name: Build and Bundle
+          id: npm-bundle
+          run: npm run bundle
+
+        - name: Check dist Directory
+          id: check-dist
+          run: |
+            if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
+              echo "Detected uncommitted changes after build. See status below:"
+              git diff --ignore-space-at-eol --text dist/
+              exit 1
+            fi
+
+    test-action:
+        name: GitHub Actions Test
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+        - name: Checkout
+          id: checkout
+          uses: actions/checkout@v4
+
+        - name: Test Local Action
+          id: test-action
+          uses: ./
+
+        - name: Print Environment Output
+          id: output-env
+          run: |
+              echo "Environment: ${{ steps.test-action.outputs.environment }}"
+
+        - name: Print Version Output
+          id: output-version
+          run: |
+              echo "Next Version: ${{ steps.test-action.outputs.nextVersion }}"
+
+        - name: Print Old Version Output
+          id: output-old-version
+          run: |
+              echo "Old Version: ${{ steps.test-action.outputs.oldVersion }}"
+
+        - name: Print Version Change Type
+          id: output-change-type
+          run: |
+              echo "Version Change: ${{ steps.test-action.outputs.versionChangeType }}"
+
+        - name: Print Prerelease Status
+          id: output-prerelease
+          run: |
+              echo "Prerelease: ${{ steps.test-action.outputs.prerelease }}"
