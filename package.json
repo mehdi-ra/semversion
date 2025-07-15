@@ -3,7 +3,6 @@
   "description": "Github action for semver release",
   "version": "0.1.2",
   "author": "Mehdi Rahimi <mehdirahimi.dev@gmail.com>",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mehdi-ra/semversion.git"
@@ -23,17 +22,17 @@
     "node": ">=20"
   },
   "scripts": {
-    "bundle": "pnpm run format:write && pnpm run package",
-    "ci-test": "pnpm exec jest",
-    "coverage": "pnpm exec make-coverage-badge --output-path ./badges/coverage.svg",
-    "format:write": "pnpm exec prettier --write .",
-    "format:check": "pnpm exec prettier --check .",
-    "lint": "pnpm exec eslint . --fix",
-    "package": "pnpm exec ncc build src/index.ts -o dist --source-map --license licenses.txt",
-    "package:watch": "pnpm run package -- --watch",
+    "bundle": "npm run format:write && npm run package",
+    "ci-test": "jest",
+    "coverage": "make-coverage-badge --output-path ./badges/coverage.svg",
+    "format:write": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --fix",
+    "package": "ncc build src/index.ts -o dist --source-map --license licenses.txt",
+    "package:watch": "npm run package -- --watch",
     "prepare": "husky",
-    "test": "pnpm exec jest",
-    "all": "pnpm run format:write && pnpm run lint && pnpm run test && pnpm run coverage && pnpm run package"
+    "test": "jest",
+    "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
   },
   "license": "MIT",
   "jest": {
