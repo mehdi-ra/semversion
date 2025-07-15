@@ -1,4 +1,4 @@
-import { setOutput } from '@actions/core'
+import { setOutput } from '@actions/core';
 
 /**
  * Set output to use it outside, in workflow
@@ -6,5 +6,5 @@ import { setOutput } from '@actions/core'
  * @param {string} context
  */
 export function output(name: string, context: string): void {
-  setOutput(name, context)
+  setOutput(name, context);
 }

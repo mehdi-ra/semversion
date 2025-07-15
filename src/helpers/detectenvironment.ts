@@ -1,27 +1,27 @@
-import { TEnvironments } from 'src/interfaces/version'
-import { input } from './getInput'
+import { TEnvironments } from '../interfaces/version';
+import { input } from './getInput';
 
 /**
  * Get the target environment
  * @returns {TEnvironments}
  */
 export function detectEnvironment(): TEnvironments {
-  const branch = input('branch_name')
-  const stageBranch = input('stage_branch_name')
-  const prodBranch = input('prod_branch_name')
-  const devBranch = input('dev_branch_name')
+  const branch = input('branch_name');
+  const stageBranch = input('stage_branch_name');
+  const prodBranch = input('prod_branch_name');
+  const devBranch = input('dev_branch_name');
 
   if (branch === prodBranch) {
-    return 'prod'
+    return 'prod';
   }
 
   if (branch === devBranch) {
-    return 'dev'
+    return 'dev';
   }
 
   if (branch === stageBranch) {
-    return 'stage'
+    return 'stage';
   }
 
-  return 'unknown'
+  return 'unknown';
 }

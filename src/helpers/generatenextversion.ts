@@ -1,5 +1,5 @@
-import { IVersionSchema } from 'src/interfaces/version'
-import { versionUpdater } from './versionupdater'
+import { IVersionSchema } from '../interfaces/version';
+import { versionUpdater } from './versionupdater';
 
 /**
  * Get next version depending on older information.
@@ -7,6 +7,6 @@ import { versionUpdater } from './versionupdater'
  * @returns {string} The next version.
  */
 export function generateNextVersion(versionSchema: IVersionSchema): string {
-  const nextVersionGen = versionUpdater[versionSchema.versionChangeType]
-  return nextVersionGen(versionSchema)
+  const nextVersionGen = versionUpdater[versionSchema.versionChangeType];
+  return nextVersionGen(versionSchema);
 }

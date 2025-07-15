@@ -1,4 +1,4 @@
 export interface IRepoDetails {
-  owner: string
-  name: string
+  owner: string;
+  name: string;
 }

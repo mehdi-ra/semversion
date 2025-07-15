@@ -3,14 +3,14 @@ export function versionMiddlewareApplier(
   middlewares: ((v: string) => string)[]
 ): string {
   if (middlewares.length <= 0) {
-    return version
+    return version;
   }
 
-  let modifiedVersion = version
+  let modifiedVersion = version;
 
   for (const middleware of middlewares) {
-    modifiedVersion = middleware(modifiedVersion)
+    modifiedVersion = middleware(modifiedVersion);
   }
 
-  return modifiedVersion
+  return modifiedVersion;
 }

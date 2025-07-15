@@ -1,0 +1,1 @@
+{"version":3,"file":"generatenextversion.js","sourceRoot":"","sources":["../../src/helpers/generatenextversion.ts"],"names":[],"mappings":";;AAQA,kDAGC;AAVD,qDAAkD;AAOlD,SAAgB,mBAAmB,CAAC,aAA6B;IAC/D,MAAM,cAAc,GAAG,+BAAc,CAAC,aAAa,CAAC,iBAAiB,CAAC,CAAC;IACvE,OAAO,cAAc,CAAC,aAAa,CAAC,CAAC;AACvC,CAAC"}

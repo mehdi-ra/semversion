@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 permissions:
   contents: read
@@ -30,17 +34,35 @@ jobs:
         id: npm-ci
         run: npm ci
 
-      - name: Lint
+      - name: Check Code Formatting
+        id: format-check
+        run: npm run format:check
+
+      - name: Lint Code
         id: npm-lint
         run: npm run lint
 
-      - name: Test
-        id: npm-ci-test
-        run: npm run ci-test
+      - name: Run Tests
+        id: npm-test
+        run: npm run test
+
+      - name: Build and Bundle
+        id: npm-bundle
+        run: npm run bundle
+
+      - name: Check dist Directory
+        id: check-dist
+        run: |
+          if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff --ignore-space-at-eol --text dist/
+            exit 1
+          fi
 
   test-action:
-    name: Gi tHub Actions Test
+    name: GitHub Actions Test
     runs-on: ubuntu-latest
+    needs: test-typescript
     permissions:
       contents: write
 
@@ -53,31 +75,38 @@ jobs:
         id: test-action
         uses: ./
 
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.environment }}"
+      - name: Print Environment Output
+        id: output-env
+        run: |
+          echo "Environment: ${{ steps.test-action.outputs.environment }}"
 
-      - name: Print Output2
-        id: outputs
-        run: echo "${{ steps.test-action.outputs.nextVersion }}"
+      - name: Print Version Output
+        id: output-version
+        run: |
+          echo "Next Version: ${{ steps.test-action.outputs.nextVersion }}"
+
+      - name: Print Old Version Output
+        id: output-old-version
+        run: |
+          echo "Old Version: ${{ steps.test-action.outputs.oldVersion }}"
+
+      - name: Print Version Change Type
+        id: output-change-type
+        run: |
+          echo "Version Change: ${{ steps.test-action.outputs.versionChangeType }}"
+
+      - name: Print Prerelease Status
+        id: output-prerelease
+        run: |
+          echo "Prerelease: ${{ steps.test-action.outputs.prerelease }}"
 
       - name: Create Release
         uses: ncipollo/release-action@v1.14.0
-        if:
-          '${{ steps.test-action.outputs.nextVersion !=
-          steps.test-action.outputs.oldVersion }}'
+        if: |
+          steps.test-action.outputs.nextVersion != steps.test-action.outputs.oldVersion &&
+          github.ref == 'refs/heads/main'
         with:
           name: '${{ steps.test-action.outputs.nextVersion }}'
           tag: '${{ steps.test-action.outputs.nextVersion }}'
           prerelease: '${{ steps.test-action.outputs.prerelease }}'
-          body: '${{ steps.changelog-ci.outputs.change-logs }}'
-
-      - uses: marvinpinto/action-automatic-releases@v1.2.1
-        if:
-          '${{ steps.test-action.outputs.nextVersion !=
-          steps.test-action.outputs.oldVersion }}'
-        with:
-          repo_token: ${{ github.token }}
-          automatic_release_tag: '${{ steps.test-action.outputs.nextVersion }}'
-          prerelease: '${{ steps.test-action.outputs.prerelease }}'
-          title: '${{ steps.test-action.outputs.nextVersion }}'
+          body: 'Release ${{ steps.test-action.outputs.nextVersion }} - ${{ steps.test-action.outputs.versionChangeType }} update'

@@ -1,4 +1,4 @@
-import { getInput, InputOptions } from '@actions/core'
+import { getInput, InputOptions } from '@actions/core';
 
 /**
  * Get input from github action core
@@ -7,5 +7,5 @@ import { getInput, InputOptions } from '@actions/core'
  * @returns {string}
  */
 export function input(name: string, options?: InputOptions): string {
-  return getInput(name, options)
+  return getInput(name, options);
 }

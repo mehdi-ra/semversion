@@ -1,7 +1,7 @@
-import { Octokit } from 'octokit'
-import { input } from './getInput'
-import { getRepoDetails } from './getreponame'
-import { error } from '@actions/core'
+import { Octokit } from '@octokit/rest';
+import { input } from './getInput';
+import { getRepoDetails } from './getreponame';
+import { error } from '@actions/core';
 
 /**
  * Get latest release and the tag.
@@ -9,11 +9,11 @@ import { error } from '@actions/core'
  * @returns { string } latest release name.
  */
 export async function getLastRelease(): Promise<string> {
-  const token = input('token')
-  const repoDetails = getRepoDetails()
+  const token = input('token');
+  const repoDetails = getRepoDetails();
   const octokit = new Octokit({
-    auth: token
-  })
+    auth: token,
+  });
 
   try {
     const releases = await octokit.request(
@@ -22,27 +22,26 @@ export async function getLastRelease(): Promise<string> {
         owner: repoDetails.owner,
         repo: repoDetails.name,
         headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
-        }
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
       }
-    )
+    );
 
     const sorted = releases.data.sort((a, b) => {
-      const dateA = new Date(a.created_at)
-      const dateB = new Date(b.created_at)
-      return dateB.getTime() - dateA.getTime()
-    })
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      return dateB.getTime() - dateA.getTime();
+    });
 
-    const version = sorted[0]?.name || sorted[0]?.tag_name
+    const version = sorted[0]?.name || sorted[0]?.tag_name;
 
     if (!version) {
-      throw new TypeError('Version is empty !')
+      throw new TypeError('Version is empty !');
     }
 
-    return version
+    return version;
   } catch (e) {
-    error(e as Error)
-    console.error(e)
-    return '0.1.0'
+    error(e as Error);
+    return '0.1.0';
   }
 }
