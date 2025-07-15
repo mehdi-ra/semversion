@@ -10,6 +10,7 @@
   "bugs": {
     "url": "https://github.com/mehdi-ra/semversion/issues"
   },
+  "type": "module",
   "keywords": [
     "actions",
     "node",
