@@ -1,7 +1,7 @@
 import { getNextVersionSchema } from './helpers/getnextversionscheme'
 import { generateNextVersion } from './helpers/generatenextversion'
 import { getCommitsMessage } from './helpers/getcommitsmessage'
-import { getLastRelease } from './helpers/getLastRelease'
+import { getLastRelease } from './helpers/getlastrelease'
 import { output } from './helpers/setoutput'
 import { setFailed } from '@actions/core'
 
@@ -27,6 +27,10 @@ export async function run(): Promise<void> {
     output('oldVersion', nextVersionSchema.oldVersion)
     output('prerelease', nextVersionSchema.isPreRelease ? 'true' : 'false')
   } catch (error) {
-    if (error instanceof Error) setFailed(error.message)
+    if (error instanceof Error) {
+      setFailed(error.message)
+    }
+    console.log(error);
+    setFailed(error?.toString() || "Undefined error happened")
   }
 }

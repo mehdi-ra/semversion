@@ -4,12 +4,12 @@ exports.run = run;
 const getnextversionscheme_1 = require("./helpers/getnextversionscheme");
 const generatenextversion_1 = require("./helpers/generatenextversion");
 const getcommitsmessage_1 = require("./helpers/getcommitsmessage");
-const getLastRelease_1 = require("./helpers/getLastRelease");
+const getlastrelease_1 = require("./helpers/getlastrelease");
 const setoutput_1 = require("./helpers/setoutput");
 const core_1 = require("@actions/core");
 async function run() {
     try {
-        const lastReleaseVersion = await (0, getLastRelease_1.getLastRelease)();
+        const lastReleaseVersion = await (0, getlastrelease_1.getLastRelease)();
         const commitMessage = await (0, getcommitsmessage_1.getCommitsMessage)();
         const nextVersionSchema = (0, getnextversionscheme_1.getNextVersionSchema)(lastReleaseVersion, commitMessage);
         (0, setoutput_1.output)('environment', nextVersionSchema.environment);
@@ -19,8 +19,11 @@ async function run() {
         (0, setoutput_1.output)('prerelease', nextVersionSchema.isPreRelease ? 'true' : 'false');
     }
     catch (error) {
-        if (error instanceof Error)
+        if (error instanceof Error) {
             (0, core_1.setFailed)(error.message);
+        }
+        console.log(error);
+        (0, core_1.setFailed)(error?.toString() || "Undefined error happened");
     }
 }
 //# sourceMappingURL=main.js.map

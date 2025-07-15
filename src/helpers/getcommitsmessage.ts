@@ -1,5 +1,3 @@
-// # Get the commit message using it's hash
-
 import { Octokit } from '@octokit/rest';
 import { input } from './getInput';
 import { getRepoDetails } from './getreponame';
